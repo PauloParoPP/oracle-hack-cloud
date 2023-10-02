@@ -22,6 +22,3 @@ Durante as integrações entre front-end e o endpoint back-end, podemos receber 
 
 [Liberando CORS](https://videohub.oracle.com/media/Hack%40Cloud+-+Liberando+CORS+para+POST/1_k55o2zzq)
 
-
-
-teste
