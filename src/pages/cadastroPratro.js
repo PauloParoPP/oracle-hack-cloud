@@ -7,6 +7,10 @@ import Col from 'react-bootstrap/Col';
 import '../css/cprato.css';
 import '../css/index.css';
 import React,{Component} from 'react';
+import axios from "axios";
+
+const baseURL = "https://g0b0dc3b25563d1-atpyouhungry.adb.sa-saopaulo-1.oraclecloudapps.com/ords/appuser/pratos/";
+const restauranteRUL = "https://g0b0dc3b25563d1-atpyouhungry.adb.sa-saopaulo-1.oraclecloudapps.com/ords/appuser/restaurantes/";
 
 export default class Food extends Component {
     
@@ -32,9 +36,19 @@ export default class Food extends Component {
             })
         }
 
-        submitForm(){
-                alert(JSON.stringify(this.state));
+        submitForm(e){
+            e.preventDefault();
+                //alert(JSON.stringify(this.state));
+                this.createPost(this.state);
         }
+        
+        createPost(data) {
+            axios
+              .post(baseURL,data,{'Content-Type':'application/json'})
+              .then((response) => {
+                alert(JSON.stringify(response.data));
+              });
+          } 
 
     render(){
   return (
@@ -43,7 +57,7 @@ export default class Food extends Component {
         <Container>
             <Row>
                 <Col md={{ span: 6, offset: 3 }}>
-                    <Form onSubmit={this.submitForm.bind(this)}>
+                    <Form method='post' onSubmit={this.submitForm.bind(this)}>
                             <Form.Group controlId="formGridNome">
                             <Form.Label className="details-form">Nome do Prato</Form.Label>
                             <Form.Control  className="font-forms" type="text" placeholder="Informe o email" value={this.state.nome} onChange={this.changeField.bind(this,'nome')} />
