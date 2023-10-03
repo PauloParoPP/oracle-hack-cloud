@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  nodejs:
+    build: .
+    container_name: oci-frontend
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
