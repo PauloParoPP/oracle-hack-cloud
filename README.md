@@ -14,3 +14,12 @@ docker build -t oci-frontend .
 docker run -d -p 3000:3000 oci-frontend
 ```
 
+### Deploy
+
+docker login gru.ocir.io/graupnzaqdvf
+Usuario: graupnzaqdvf/<USER>@cpqd.com.br
+
+docker tag oci-frontend gru.ocir.io/graupnzaqdvf/app-repo/oci-frontend:1.0.0
+docker push gru.ocir.io/graupnzaqdvf/app-repo/oci-frontend:1.0.0
+
+
