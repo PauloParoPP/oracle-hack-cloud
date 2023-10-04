@@ -16,10 +16,18 @@ docker run -d -p 3000:3000 oci-frontend
 
 ### Deploy
 
+Login na Cloud:
+
+```bash
 docker login gru.ocir.io/graupnzaqdvf
 Usuario: graupnzaqdvf/<USER>@cpqd.com.br
+```
 
+Deploy da imagem:
+
+```bash
 docker tag oci-frontend gru.ocir.io/graupnzaqdvf/app-repo/oci-frontend:1.0.0
 docker push gru.ocir.io/graupnzaqdvf/app-repo/oci-frontend:1.0.0
+```
 
 
