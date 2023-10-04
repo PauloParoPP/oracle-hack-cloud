@@ -9,9 +9,7 @@ import '../css/index.css';
 import React,{Component} from 'react';
 import axios from "axios";
 
-const baseURL = "https://g0b0dc3b25563d1-atpyouhungry.adb.sa-saopaulo-1.oraclecloudapps.com/ords/appuser/pratos/";
-const restauranteRUL = "https://g0b0dc3b25563d1-atpyouhungry.adb.sa-saopaulo-1.oraclecloudapps.com/ords/appuser/restaurantes/";
-
+const { REACT_APP_RESTAURANTES_API , REACT_APP_PRATOS_API} = process.env;
 export default class Food extends Component {
     
     constructor(props){
@@ -20,10 +18,11 @@ export default class Food extends Component {
                 nome: '',
                 descricao: '',
                 restaurante:'',
-                tempoParaPreparo:'',
+                tempoparapreparo:'',
                 acompanhamento:'',
-                preco:'',
-                url:''
+                preco: '',
+                url: '',
+                restaurantes:[]
             }
         }
 
@@ -34,6 +33,7 @@ export default class Food extends Component {
                 nextState[field] = _filed;
                 return nextState;
             })
+            console.log(this.state)
         }
 
         submitForm(e){
@@ -44,11 +44,30 @@ export default class Food extends Component {
         
         createPost(data) {
             axios
-              .post(baseURL,data,{'Content-Type':'application/json'})
+              .post(REACT_APP_PRATOS_API,data,{'Content-Type':'application/json'})
               .then((response) => {
                 alert(JSON.stringify(response.data));
               });
           } 
+          setRestaurantes(data){
+            this.setState(prevState => {
+                let nextState = Object.assign({}, prevState);
+                nextState.restaurantes = data.data.items;
+                return nextState;
+            })
+        }
+    
+        fetchRestaurants = () =>{
+            axios
+                .get(REACT_APP_RESTAURANTES_API)
+                .then( data =>{
+                    this.setRestaurantes(data)
+                })
+        } 
+    
+        componentDidMount(){
+            this.fetchRestaurants();
+        }
 
     render(){
   return (
@@ -70,9 +89,9 @@ export default class Food extends Component {
                         <Form.Row>
                         <Form.Group as={Col} controlId="formGridendereco">
                             <Form.Label className="details-form">Restaurante</Form.Label>
-                            <Form.Control  as="select"  className="font-forms select-forms" placeholder="Informe o endereço" value={this.state.restaurante} onChange={this.changeField.bind(this,'restaurante')} >
-                                <option>Restaurante 1</option>
-                                <option>Restaurante 2</option>
+                            <Form.Control as="select" className="font-forms select-forms" placeholder="Informe o restaurante" value={this.state.restaurante} onChange={this.changeField.bind(this, 'restaurante')} >
+                                <option>Selecione</option>
+                                {this.state.restaurantes.map((restaurante)=>{ return <option key={restaurante.id} value={restaurante.id}>{restaurante.nome}</option>})}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col} controlId="formGridPreco">
@@ -81,9 +100,9 @@ export default class Food extends Component {
                         </Form.Group>
                         </Form.Row>
                         <Form.Row>
-                            <Form.Group as={Col} controlId="formGridtempoParaPreparo">
+                            <Form.Group as={Col} controlId="formGridtempoparapreparo">
                             <Form.Label className="details-form">Tempo para preparo</Form.Label>
-                            <Form.Control  className="font-forms" placeholder="Informe o tempo medio para preparar o pedido" value={this.state.tempoParaPreparo} onChange={this.changeField.bind(this,'tempoParaPreparo')} />
+                            <Form.Control  className="font-forms" placeholder="Informe o tempo medio para preparar o pedido" value={this.state.tempoparapreparo} onChange={this.changeField.bind(this,'tempoparapreparo')} />
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formGridAcompanhamento">

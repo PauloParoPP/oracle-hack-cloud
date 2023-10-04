@@ -9,7 +9,7 @@ import '../css/index.css';
 import React,{Component} from 'react';
 import axios from "axios";
 
-const baseURL = "https://g0b0dc3b25563d1-atpyouhungry.adb.sa-saopaulo-1.oraclecloudapps.com/ords/appuser/users/";
+const { REACT_APP_USER_API } = process.env;
 
 export default class User extends Component {
     
@@ -42,7 +42,7 @@ export default class User extends Component {
         
         createPost(data) {
             axios
-              .post(baseURL,data,{'Content-Type':'application/json'})
+              .post(REACT_APP_USER_API,data,{'Content-Type':'application/json'})
               .then((response) => {
                 alert(JSON.stringify(response.data));
               });
