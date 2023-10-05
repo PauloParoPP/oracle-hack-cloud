@@ -11,8 +11,7 @@ import Pedido from '../pages/pedidos.js';
 export default function Routes(){
     return(
         <BrowserRouter>
-            <Route path='/' exact  component={Login}/>
-            <Route path='/home' exact  component={Home}/>
+            <Route path='/' exact  component={Pedido}/>
             <Route path='/login' exact  component={Login}/>
             <Route path='/crestaurante' exact  component={Restaurant}/>
             <Route path='/cpratos' exact  component={Prato}/>

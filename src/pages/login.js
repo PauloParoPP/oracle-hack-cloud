@@ -31,7 +31,7 @@ export default class Login extends Component {
         }
 
         submitForm(){
-            if(this.state.password == '12345'){
+            if(this.state.password === '12345'){
                 this.setState(prevState => {
                     let nextState = Object.assign({},prevState);
                     nextState.redirect = true;
