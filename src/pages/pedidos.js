@@ -9,7 +9,7 @@ import '../css/index.css';
 import React, { Component } from 'react';
 import axios from 'axios';
 
-const { REACT_APP_RESTAURANTES_API, REACT_APP_PRATOS_API } = process.env;
+const { REACT_APP_RESTAURANTES_API, REACT_APP_PRATOS_API, REACT_APP_PEDIDOS_API } = process.env;
 
 export default class Pedidos extends Component {
 
@@ -17,13 +17,25 @@ export default class Pedidos extends Component {
         super(props);
         this.state = {
             pedido: '',
+            showModal: false,
+            mensagem:'',
             pratos: []
         }
     }
 
+    handleClose() {
+        this.setData('showModal', false);
+    }
+
+    handleShow() {
+        this.setData('showModal', true);
+    }
+
     submitPedido(e) {
         e.preventDefault();
-        alert(JSON.stringify(e.target.value));
+        //alert(JSON.stringify(e.target.value));
+        const data = {user:8, prato:e.target.value};
+        this.createPost(data);
     }
 
     setData(field, data) {
@@ -49,7 +61,7 @@ export default class Pedidos extends Component {
             .get(url)
             .then(data => {
                 if (field == 'pratos') {
-                    this.setData(field, data)                    
+                    this.setData(field, data)
                     this.fetchData(REACT_APP_RESTAURANTES_API, 'restaurantes')
                 }
                 else {
@@ -57,6 +69,16 @@ export default class Pedidos extends Component {
                 }
             })
     }
+    createPost(data) {
+        axios
+          .post(REACT_APP_PEDIDOS_API,data,{'Content-Type':'application/json'})
+          .then((response) => {
+            alert('Pedido realizado com sucesso!');
+          })
+          .catch(err => { 
+            alert('Erro: '+err.message);
+          })
+    }     
 
     componentDidMount() {
         this.fetchData(REACT_APP_PRATOS_API, 'pratos');
@@ -135,7 +157,11 @@ export default class Pedidos extends Component {
                         </Col>
                     </Row>
                 </Container>
+               
             </div>
+
+
+
         );
     }
 }

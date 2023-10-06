@@ -6,125 +6,129 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import '../css/cprato.css';
 import '../css/index.css';
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import axios from "axios";
 
-const { REACT_APP_RESTAURANTES_API , REACT_APP_PRATOS_API} = process.env;
+const { REACT_APP_RESTAURANTES_API, REACT_APP_PRATOS_API } = process.env;
 export default class Food extends Component {
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
-            this.state ={
-                nome: '',
-                descricao: '',
-                restaurante:'',
-                tempoparapreparo:'',
-                acompanhamento:'',
-                preco: '',
-                url: '',
-                restaurantes:[]
-            }
+        this.state = {
+            nome: '',
+            descricao: '',
+            restaurante: '',
+            tempoparapreparo: '',
+            acompanhamento: '',
+            preco: '',
+            url: '',
+            restaurantes: []
         }
+    }
 
-        changeField(field,event){
-            let _filed = event.target.value;
-            this.setState(prevState => {
-                let nextState = Object.assign({},prevState);
-                nextState[field] = _filed;
-                return nextState;
+    changeField(field, event) {
+        let _filed = event.target.value;
+        this.setState(prevState => {
+            let nextState = Object.assign({}, prevState);
+            nextState[field] = _filed;
+            return nextState;
+        })
+        console.log(this.state)
+    }
+
+    submitForm(e) {
+        e.preventDefault();
+        //alert(JSON.stringify(this.state));
+        this.createPost(this.state);
+    }
+
+    createPost(data) {
+        axios
+            .post(REACT_APP_PRATOS_API, data, { 'Content-Type': 'application/json' })
+            .then((response) => {
+                alert('Prato cadastrado com sucesso!');
             })
-            console.log(this.state)
-        }
-
-        submitForm(e){
-            e.preventDefault();
-                //alert(JSON.stringify(this.state));
-                this.createPost(this.state);
-        }
-        
-        createPost(data) {
-            axios
-              .post(REACT_APP_PRATOS_API,data,{'Content-Type':'application/json'})
-              .then((response) => {
-                alert(JSON.stringify(response.data));
-              });
-          } 
-          setRestaurantes(data){
-            this.setState(prevState => {
-                let nextState = Object.assign({}, prevState);
-                nextState.restaurantes = data.data.items;
-                return nextState;
+            .catch(err => {
+                alert('Erro: ' + err.message);
             })
-        }
-    
-        fetchRestaurants = () =>{
-            axios
-                .get(REACT_APP_RESTAURANTES_API)
-                .then( data =>{
-                    this.setRestaurantes(data)
-                })
-        } 
-    
-        componentDidMount(){
-            this.fetchRestaurants();
-        }
+    }
 
-    render(){
-  return (
-<div className="center">
-        <Menu/>
-        <Container>
-            <Row>
-                <Col md={{ span: 6, offset: 3 }}>
-                    <Form method='post' onSubmit={this.submitForm.bind(this)}>
-                            <Form.Group controlId="formGridNome">
-                            <Form.Label className="details-form">Nome do Prato</Form.Label>
-                            <Form.Control  className="font-forms" type="text" placeholder="Informe o email" value={this.state.nome} onChange={this.changeField.bind(this,'nome')} />
-                            </Form.Group>
+    setRestaurantes(data) {
+        this.setState(prevState => {
+            let nextState = Object.assign({}, prevState);
+            nextState.restaurantes = data.data.items;
+            return nextState;
+        })
+    }
 
-                        <Form.Group controlId="formGridDescricao">
-                            <Form.Label className="details-form">Descrição do prato</Form.Label>
-                            <Form.Control  as="textarea" rows={3} className="font-forms" placeholder="Informe o descritivo do prato" value={this.state.descricao} onChange={this.changeField.bind(this,'descricao')} />
-                        </Form.Group>
-                        <Form.Row>
-                        <Form.Group as={Col} controlId="formGridendereco">
-                            <Form.Label className="details-form">Restaurante</Form.Label>
-                            <Form.Control as="select" className="font-forms select-forms" placeholder="Informe o restaurante" value={this.state.restaurante} onChange={this.changeField.bind(this, 'restaurante')} >
-                                <option>Selecione</option>
-                                {this.state.restaurantes.map((restaurante)=>{ return <option key={restaurante.id} value={restaurante.id}>{restaurante.nome}</option>})}
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group as={Col} controlId="formGridPreco">
-                            <Form.Label className="details-form">Preço do prato</Form.Label>
-                            <Form.Control  className="font-forms" placeholder="Informe o preço do prato" value={this.state.preco} onChange={this.changeField.bind(this,'preco')} />
-                        </Form.Group>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Group as={Col} controlId="formGridtempoparapreparo">
-                            <Form.Label className="details-form">Tempo para preparo</Form.Label>
-                            <Form.Control  className="font-forms" placeholder="Informe o tempo medio para preparar o pedido" value={this.state.tempoparapreparo} onChange={this.changeField.bind(this,'tempoparapreparo')} />
-                            </Form.Group>
+    fetchRestaurants = () => {
+        axios
+            .get(REACT_APP_RESTAURANTES_API)
+            .then(data => {
+                this.setRestaurantes(data)
+            })
+    }
 
-                            <Form.Group as={Col} controlId="formGridAcompanhamento">
-                            <Form.Label className="details-form">Acompanhamento</Form.Label>
-                            <Form.Control className="font-forms select-forms" as="select"  placeholder="Selecione o acompanhamento" value={this.state.acompanhamento} onChange={this.changeField.bind(this,'acompanhamento')}  >
-                                <option>Acompanhamento 1</option>
-                                <option>Acompanhamento 2</option>
-                            </Form.Control>
-                            </Form.Group>
-                        </Form.Row>
-                        <Form.Group controlId="formGridNome">
-                            <Form.Label className="details-form">Imagem do prato (URL)</Form.Label>
-                            <Form.Control  className="font-forms" type="text" placeholder="Informe a url da imagem (dica use o bucket)" value={this.state.url} onChange={this.changeField.bind(this,'url')} />
-                        </Form.Group>
-                        <Button variant="danger" type="submit">
-                            Cadastrar
-                        </Button>
-                    </Form>
-                </Col>
-            </Row>
-        </Container>
-</div>
-  );
-}
+    componentDidMount() {
+        this.fetchRestaurants();
+    }
+
+    render() {
+        return (
+            <div className="center">
+                <Menu />
+                <Container>
+                    <Row>
+                        <Col md={{ span: 6, offset: 3 }}>
+                            <Form method='post' onSubmit={this.submitForm.bind(this)}>
+                                <Form.Group controlId="formGridNome">
+                                    <Form.Label className="details-form">Nome do Prato</Form.Label>
+                                    <Form.Control className="font-forms" type="text" placeholder="Informe o email" value={this.state.nome} onChange={this.changeField.bind(this, 'nome')} />
+                                </Form.Group>
+
+                                <Form.Group controlId="formGridDescricao">
+                                    <Form.Label className="details-form">Descrição do prato</Form.Label>
+                                    <Form.Control as="textarea" rows={3} className="font-forms" placeholder="Informe o descritivo do prato" value={this.state.descricao} onChange={this.changeField.bind(this, 'descricao')} />
+                                </Form.Group>
+                                <Form.Row>
+                                    <Form.Group as={Col} controlId="formGridendereco">
+                                        <Form.Label className="details-form">Restaurante</Form.Label>
+                                        <Form.Control as="select" className="font-forms select-forms" placeholder="Informe o restaurante" value={this.state.restaurante} onChange={this.changeField.bind(this, 'restaurante')} >
+                                            <option>Selecione</option>
+                                            {this.state.restaurantes.map((restaurante) => { return <option key={restaurante.id} value={restaurante.id}>{restaurante.nome}</option> })}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group as={Col} controlId="formGridPreco">
+                                        <Form.Label className="details-form">Preço do prato</Form.Label>
+                                        <Form.Control className="font-forms" placeholder="Informe o preço do prato" value={this.state.preco} onChange={this.changeField.bind(this, 'preco')} />
+                                    </Form.Group>
+                                </Form.Row>
+                                <Form.Row>
+                                    <Form.Group as={Col} controlId="formGridtempoparapreparo">
+                                        <Form.Label className="details-form">Tempo para preparo</Form.Label>
+                                        <Form.Control className="font-forms" placeholder="Informe o tempo medio para preparar o pedido" value={this.state.tempoparapreparo} onChange={this.changeField.bind(this, 'tempoparapreparo')} />
+                                    </Form.Group>
+
+                                    <Form.Group as={Col} controlId="formGridAcompanhamento">
+                                        <Form.Label className="details-form">Acompanhamento</Form.Label>
+                                        <Form.Control className="font-forms select-forms" as="select" placeholder="Selecione o acompanhamento" value={this.state.acompanhamento} onChange={this.changeField.bind(this, 'acompanhamento')}  >
+                                            <option>Acompanhamento 1</option>
+                                            <option>Acompanhamento 2</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Form.Row>
+                                <Form.Group controlId="formGridNome">
+                                    <Form.Label className="details-form">Imagem do prato (URL)</Form.Label>
+                                    <Form.Control className="font-forms" type="text" placeholder="Informe a url da imagem (dica use o bucket)" value={this.state.url} onChange={this.changeField.bind(this, 'url')} />
+                                </Form.Group>
+                                <Button variant="danger" type="submit">
+                                    Cadastrar
+                                </Button>
+                            </Form>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
 }
