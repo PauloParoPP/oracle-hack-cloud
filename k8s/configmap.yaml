@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oci-frontend
+  namespace: graupnzaqdvf
+data: 
+  YOUHUNGRY_IMAGE: gru.ocir.io/graupnzaqdvf/app-repo/oci-frontend:1.0.0
+  YOUHUNGRY_CONTAINER_NAME: oci-frontend
+  YOUHUNGRY_HOST_NAME: oci-frontend
+  YOUHUNGRY_HOST_PORT: '3000'
+  

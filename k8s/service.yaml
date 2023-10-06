@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: oci-frontend-lb
+  namespace: graupnzaqdvf
+  annotations:
+    oci.oraclecloud.com/load-balancer-type: "lb"
+  labels:
+    app: oci-frontend
+spec:
+  loadBalancerIP: 129.148.36.13
+  selector:
+    app: oci-frontend
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

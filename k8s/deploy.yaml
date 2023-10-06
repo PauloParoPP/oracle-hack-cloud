@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oci-frontend
+  namespace: graupnzaqdvf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oci-frontend
+  template:
+    metadata:
+      labels:
+        app: oci-frontend
+    spec:
+      containers:
+      - name: oci-frontend
+        image: gru.ocir.io/graupnzaqdvf/app-repo/oci-frontend:${versao}
+        ports:
+        - containerPort: 3000
+
