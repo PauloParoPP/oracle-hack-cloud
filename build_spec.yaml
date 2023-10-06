@@ -31,6 +31,7 @@ steps:
     command: |
       cd ${OCI_PRIMARY_SOURCE_DIR}
       docker build --pull --rm -t oci-frontend -f Dockerfile .
+      docker tag oci-frontend gru.ocir.io/graupnzaqdvf/app-repo/oci-frontend:1.0.0
     onFailure:
       - type: Command
         command: |
